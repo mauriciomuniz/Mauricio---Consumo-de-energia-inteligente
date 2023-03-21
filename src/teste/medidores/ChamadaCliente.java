@@ -10,17 +10,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ChamadaCliente  extends Thread{
-    private Socket socket;
+    private Socket connectionMedidor;
     
     
-    public ChamadaCliente(Socket socket, LinkedList<Cliente> cliente){
-        this.socket = socket;
+    public ChamadaCliente(Socket connectionMedidor, LinkedList<Cliente> cliente){
+        this.connectionMedidor = connectionMedidor;
     }
 
     @Override
     public void run(){
         try {
-            InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
+            InputStreamReader inputStreamReader = new InputStreamReader(connectionMedidor.getInputStream());
             BufferedReader leitor = new BufferedReader(inputStreamReader);
             StringBuilder requestBody = new StringBuilder();
             while(leitor.ready()){
@@ -49,49 +49,49 @@ public class ChamadaCliente  extends Thread{
 
                     case "/teste":
                     if (method.equals("GET")){
-                        System.out.println("Rota '/teste' chamada pelo cliente " + socket.getInetAddress().getHostAddress());
+                        System.out.println("Rota '/teste' chamada pelo cliente " + connectionMedidor.getInetAddress().getHostAddress());
                         String resposta = "{\"mensagem\": \"Bem-vindo ao servidor!\"}";
-                        enviarRespostaget(socket, resposta);
+                        enviarRespostaget(connectionMedidor, resposta);
 
                     }
                     break;
 
                     case "/historico":
                     if (method.equals("GET")){
-                        System.out.println("Rota '/historico' chamada pelo cliente " + socket.getInetAddress().getHostAddress());
+                        System.out.println("Rota '/historico' chamada pelo cliente " + connectionMedidor.getInetAddress().getHostAddress());
                         
                         String resposta = clienteHistoricoId(identificador); //"{\"mensagem\": \"Bem-vindo ao servidor!\"}";
-                        enviarRespostaget(socket, resposta);
+                        enviarRespostaget(connectionMedidor, resposta);
                         
                     }
                     break;
 
                     case "/consumo":
                     if (method.equals("GET")){
-                        System.out.println("Rota '/consumo' chamada pelo cliente " + socket.getInetAddress().getHostAddress());
+                        System.out.println("Rota '/consumo' chamada pelo cliente " + connectionMedidor.getInetAddress().getHostAddress());
                         
                         String resposta = clienteConsumoId(identificador); //"{\"mensagem\": \"Bem-vindo ao servidor!\"}";
-                        enviarRespostaget(socket, resposta);
+                        enviarRespostaget(connectionMedidor, resposta);
                         
                     }
                     break;
 
                     case "/fatura":
                     if (method.equals("GET")){
-                        System.out.println("Rota '/fatura' chamada pelo cliente " + socket.getInetAddress().getHostAddress());
+                        System.out.println("Rota '/fatura' chamada pelo cliente " + connectionMedidor.getInetAddress().getHostAddress());
                         
                         String resposta = clienteFaturaId(identificador); //"{\"mensagem\": \"Bem-vindo ao servidor!\"}";
-                        enviarRespostaget(socket, resposta);
+                        enviarRespostaget(connectionMedidor, resposta);
                         
                     }
                     break;
 
                     case "/alerta":
                     if (method.equals("GET")){
-                        System.out.println("Rota '/alerta' chamada pelo cliente " + socket.getInetAddress().getHostAddress());
+                        System.out.println("Rota '/alerta' chamada pelo cliente " + connectionMedidor.getInetAddress().getHostAddress());
                         
                         String resposta = clienteAlertaId(identificador); //"{\"mensagem\": \"Bem-vindo ao servidor!\"}";
-                        enviarRespostaget(socket, resposta);
+                        enviarRespostaget(connectionMedidor, resposta);
                         
                     }
                     break;
@@ -100,7 +100,7 @@ public class ChamadaCliente  extends Thread{
 
             }
 
-            socket.close();
+            connectionMedidor.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

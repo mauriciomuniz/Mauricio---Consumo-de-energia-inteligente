@@ -39,34 +39,34 @@ public class Cadastro extends Thread {
             String path = parts[1].substring(1); // caminho da rota
             
 
-            String[] dados = path.split("-");
-            System.out.println("id: "+ dados[0]);
-            System.out.println("consumo: "+ dados[1]);
-            System.out.println("data: "+ dados[2]);
-            System.out.println("horario: "+ dados[3]);
+            String[] entrada = path.split("-");
+            System.out.println("id: "+ entrada[0]);
+            System.out.println("consumo: "+ entrada[1]);
+            System.out.println("data: "+ entrada[2]);
+            System.out.println("horario: "+ entrada[3]);
             LinkedList<Cliente> clienteMedidas = controlador.getClientes();
             boolean naoExiste = true; 
 
             if(clienteMedidas.size() > 0){
                 boolean atualizado = false;
                 for(Cliente cliente : clienteMedidas){
-                    if(cliente.getId().equals(dados[0])){
-                        cliente.ConsumoAtualiza(Integer.parseInt(dados[1]), dados[2], dados[3]);
+                    if(cliente.getId().equals(entrada[0])){
+                        cliente.ConsumoAtualiza(Integer.parseInt(entrada[1]), entrada[2], entrada[3]);
                         controlador.setClientes(clienteMedidas);
                         atualizado = true;
                     }
                 }
                 if(atualizado){
-                    System.out.println("O usuario de id: " + dados[0] + " teve os dados atualizados");
+                    System.out.println("O usuario de id: " + entrada[0] + " teve os entrada atualizados");
                     System.out.println("");
                     naoExiste = false;
                 } 
             }
             
             
-            if(naoExiste && dados.length>1){
-                System.out.println("Cadastro Realizado com sucesso do cliente id:" +dados[0]);
-                Cliente novoCliente = new Cliente(dados[0],dados[2]);
+            if(naoExiste && entrada.length>1){
+                System.out.println("Cadastro Realizado com sucesso do cliente id:" +entrada[0]);
+                Cliente novoCliente = new Cliente(entrada[0],entrada[2]);
                 controlador.getClientes().add(novoCliente);
             }
 
