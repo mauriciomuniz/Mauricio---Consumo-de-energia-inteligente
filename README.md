@@ -58,6 +58,17 @@ O sistema a principio iria armazenar seus dados em um arquivo _Json_, mas devido
 
 Desenvolver aplicações que se comunicam em rede local ou internet é hoje uma necessidade crescente. Neste problema aprendemos a desenvolver este tipo de aplicação usando Java e sockets. Os sockets em Java representam um recurso poderoso para desenvolvimento de aplicações que podem comunicar-se via rede. Apesar de existirem frameworks que facilitam o desenvolvimento de aplicações em rede com Java é importante entender o fundamento da comunicação com sockets que é a base para toda e qualquer aplicação que utiliza comunicação em rede.
 
+##### 3.1 Requisições
+
+As requições foram feitas usando o GET e podem ser feitas através das rotas:
+
+- ` http://localhost:7776/3-400-10/11/2010-10:10:10 ` para cadastrar um medidor com o id: 3; consumo: 400; data medida: 10/11/2010; horário 10:10:10. Quando é feito uma nova requisição utilizando esse id, ele irá atualizar a medida, se for utilizando outro id, um novo medidor é cadastrado.
+- `http://localhost:8081/fatura=3=0` para gerar uma fatura para o medidor  de id = 3. O `=0` não representa nada nessa rota.
+- `http://localhost:8081/consumo=3=0 ` para consultar todo o consumo do medidor de id = 3. O `=0` não representa nada nessa rota.
+- `http://localhost:8081/alerta=3=0 ` compara as duas últimas medidas do medidor e faz calculos para saber se ele teve um consumo excessivo e/ou grande variação.  O `=0` não representa nada nessa rota.
+- `http://localhost:8081/historicofatura=3=1` acessa todo histórico de fatura do medidor, com toda a informação gerada pela fatura daquele medidor correspondente a fatura gerada anteriormente, onde agora usamos uma rota `/hitoricofatura`, mais o identificador `id=3` e mais a primeira fatura armazenada em `=1`
+- ` http://localhost:8081/historico=3=0` onde é acessado o historico de um cliente seguido de seu identificador.  O `=0` não representa nada nessa rota.
+
 
 #### 4. Referências
 
