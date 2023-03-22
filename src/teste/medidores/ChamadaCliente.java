@@ -40,10 +40,12 @@ public class ChamadaCliente  extends Thread{
                 String[] parts2 = path.split("=");
                 String MesmaRota = parts2[0];
                 String identificador = parts2[1];
+                String mes = parts2[2];
                 System.out.println("método:"+ method);
                 System.out.println("caminho: "+path);
                 System.out.println("a rota agr: "+MesmaRota);
                 System.out.println("identificador: "+identificador);
+                //System.out.println("mes: "+mes);
                 System.out.println("PASSAAAAAA......");
                 switch (MesmaRota){
 
@@ -95,6 +97,15 @@ public class ChamadaCliente  extends Thread{
                         
                     }
                     break;
+                    case "/historicofatura":
+                    if (method.equals("GET")){
+                        System.out.println("Rota '/historicofatura' chamada pelo cliente " + connectionMedidor.getInetAddress().getHostAddress());
+                        
+                        String resposta = clienteHistoricoFaturaId(identificador,mes); //"{\"mensagem\": \"Bem-vindo ao servidor!\"}";
+                        enviarRespostaget(connectionMedidor, resposta);
+                        
+                    }
+                    break;
                 }
 
 
@@ -141,7 +152,10 @@ public class ChamadaCliente  extends Thread{
         }
     }
     
+    
 
+
+    
     public String clienteHistoricoId(String id) {
         Cliente cliente = buscaClienteId(id);
         if (cliente == null) {
@@ -192,23 +206,77 @@ public class ChamadaCliente  extends Thread{
     }
     
 
+
     public String clienteFaturaId(String id){
         Cliente cliente = buscaClienteId(id);
         if(cliente == null) {
             return "Nao existe um cliente registrado com esse id";
         }
-            float fatura = cliente.getConsumoTotal()* 0.06f;
-            String dataVencimento = dataPagar(cliente.getfaturaDia());
-            String msgfatura = "Fatura\nCliente com id: " + cliente.getId() + 
+        float fatura = cliente.getConsumoTotal() * 0.06f;
+        LocalDate dataAtual = LocalDate.parse(cliente.getfaturaDia(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate dataPagamento;
+        if (dataAtual.getMonthValue() < 12) {
+            dataPagamento = dataAtual.plusMonths(1);
+        } else {
+            dataPagamento = dataAtual.plusMonths(1).withMonth(1).withYear(dataAtual.getYear() + 1);
+        }
+        String dataVencimento = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(dataPagamento);
+        String msgfatura = "Fatura\nCliente com id: " + cliente.getId() + 
             "\nConsumo Total: " + cliente.getConsumoTotal()+ "kW/h"+
             "\nData de vencimento da fatura: " + dataVencimento+ 
             "\nValor a pagar: R$" + fatura;
-            cliente.setConsumoTotal(0);
-            atualizaDiaFatura(cliente, dataVencimento);
-            return msgfatura;
-            
-        
+        cliente.setConsumoTotal(0);
+        atualizaDiaFatura(cliente, dataVencimento);
+        salvaFatura(cliente,msgfatura);
+        return msgfatura;
     }
+    
+    
+
+    public void salvaFatura(Cliente cliente, String msgfatura) {
+        String[] faturas = cliente.getFaturas();
+        // Encontrar a primeira posição vazia no registro de faturas do cliente
+        int posicao = -1;
+        for (int i = 0; i < faturas.length; i++) {
+            if (faturas[i] == null) {
+                System.out.println("passa");
+                posicao = i;
+                break;
+            }
+        }
+        System.out.println("passa");
+        // Se não houver posição vazia, expandir o registro de faturas
+        if (posicao == -1) {
+            String[] novoRegistro = new String[faturas.length + 1];
+            for (int i = 0; i < faturas.length; i++) {
+                novoRegistro[i] = faturas[i];
+            }
+            posicao = faturas.length;
+            cliente.setFaturas(novoRegistro);
+        }
+        // Salvar a fatura na posição encontrada ou adicionada
+        faturas[posicao] = msgfatura;
+        System.out.println("faturas: "+faturas[posicao]);
+    }
+    
+
+
+    public String clienteHistoricoFaturaId(String identificador, String mes) {
+        // Procura pelo cliente com o identificador informado
+        Cliente cliente = buscaClienteId(identificador);
+        
+        // Se o cliente não existir, retorna uma mensagem de erro
+        if (cliente == null) {
+            return "Cliente não encontrado";
+        }
+        
+        // Converte o mês para inteiro
+        int mesInt = Integer.parseInt(mes);
+        
+        // Retorna a fatura correspondente ao mês informado
+        return cliente.getFaturas()[mesInt - 1];
+    }
+    
 
     private void atualizaDiaFatura(Cliente cliente, String date){
         LinkedList<Cliente> listaClientes = controlador.getClientes();
@@ -220,19 +288,6 @@ public class ChamadaCliente  extends Thread{
         }
     }
     
-    public static String dataPagar(String data) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataAtual = LocalDate.parse(data, formatter);
-
-        LocalDate dataPagamento;
-        if (dataAtual.getMonthValue() < 12) {
-            dataPagamento = dataAtual.plusMonths(1);
-        } else {
-            dataPagamento = dataAtual.plusMonths(1).withMonth(1).withYear(dataAtual.getYear() + 1);
-        }
-
-        return formatter.format(dataPagamento);
-    }
 
 }
     

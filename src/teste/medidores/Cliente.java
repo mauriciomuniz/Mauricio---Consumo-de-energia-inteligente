@@ -8,7 +8,16 @@ public class Cliente {
     private Medidor[] historicoAlarme = new Medidor[2];
     public boolean ConsumoAlto = false;
     private String faturaDia;
+    private String [] faturas = new String[15];
     
+    public String[] getFaturas() {
+        return faturas;
+    }
+
+    public void setFaturas(String[] faturas) {
+        this.faturas = faturas;
+    }
+
     public Cliente(String id, String medicaoDia) {
         this.id = id;
         this.consumoTotal = 0;
