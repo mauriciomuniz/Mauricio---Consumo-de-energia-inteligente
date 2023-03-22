@@ -8,12 +8,14 @@ Considerando as vantagens que a _IoT_ pode proporcionar às pessoas e meio ambie
 
 Nesta sessão será descrita a base teórica necessária para a resolução do problema.
 
-##### 2.1 API Rest
+##### 2.1 API
 Segundo a Amazon[1], API significa _Application Programming Interface_ (Interface de Programação de Aplicação). No contexto de _APIs_, a palavra Aplicação refere-se a qualquer software com uma função distinta. A interface pode ser pensada como um contrato de serviço entre duas aplicações. Esse contrato define como as duas se comunicam usando solicitações e respostas. A documentação de suas respectivas APIs contém informações sobre como os desenvolvedores devem estruturar essas solicitações e respostas.  
 
 A arquitetura da _API_ geralmente é explicada em termos de cliente e servidor. A aplicação que envia a solicitação é chamada de cliente e a aplicação que envia a resposta é chamada de servidor. Então, no exemplo do clima, o banco de dados meteorológico do instituto é o servidor e o aplicativo móvel é o cliente. 
 
 Existem quatro maneiras diferentes pelas quais as APIs podem funcionar, dependendo de quando e por que elas foram criadas. Nesse problema foi usado _API Rest_. 
+
+![API-page-grafic](https://github.com/mauriciomuniz/Mauricio---Consumo-de-energia-inteligente/blob/master/img/API-page-graphic.png)
 
 ##### 2.1.1 API Rest
 
@@ -29,6 +31,7 @@ Os protocolos TCP/IP podem ser utilizados sobre qualquer estrutura de rede, seja
 
 A arquitetura _TCP/IP_, assim como a _OSI_, realiza a divisão de funções do sistema de comunicação em estruturas de camadas.[2]
 
+![imagemtcp.gif](https://github.com/mauriciomuniz/Mauricio---Consumo-de-energia-inteligente/blob/master/img/imagemtcp.gif)
 #### 2.3 Sockets 
 
 De acordo com a [3]: “Socket é um ponto de comunicação entre duas máquinas”, ou seja, podemos enviar mensagens entre a máquina A e a máquina B através de uma conexão estabelecida com o _Socket_.
